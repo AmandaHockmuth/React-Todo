@@ -1,8 +1,12 @@
-const AddTodoForm = () => {
+const AddTodoForm = (props) => {
   function handleAddTodo(event) {
     event.preventDefault();
-    const input = event.target.querySelector("input");
-    const inputValue = input.value;
+    const form = event.target;
+    const input = form.querySelector("input");
+    const todoTitle = input.value;
+    console.log(todoTitle);
+    props.onAddTodo(todoTitle);
+    form.reset();
   }
 
   return (

@@ -1,8 +1,14 @@
 const AddTodoForm = () => {
+  function handleAddTodo(event) {
+    event.preventDefault();
+    const input = event.target.querySelector("input");
+    const inputValue = input.value;
+  }
+
   return (
-    <form>
+    <form onSubmit={handleAddTodo}>
       <label htmlFor="todoTitle">Title</label>
-      <input id="todoTitle"></input>
+      <input name="title" id="todoTitle"></input>
       <button type="submit">Add</button>
     </form>
   );

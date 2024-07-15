@@ -1,3 +1,3 @@
-export default function TodoListItem(props) {
-  return <li>{props.title}</li>;
+export default function TodoListItem({title}) {
+  return <li>{title}</li>;
 }

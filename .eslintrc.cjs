@@ -17,6 +17,6 @@ module.exports = {
       "warn",
       { allowConstantExport: true },
     ],
-    "react/prop-types": [0], // <-- Add this to stop eslint from complaining about prop types
+    "react/prop-types": ["warn"], // <-- this allows eslint to warn of possible errors but does not actually throw an error
   },
 };

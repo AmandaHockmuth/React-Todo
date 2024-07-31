@@ -1,13 +1,16 @@
 import TodoListItem from "./TodoListItem";
 
-const TodoList = (props) => {
+export default function TodoList({ onTodoList, onRemoveTodo }) {
   return (
     <ul>
-      {props.onTodoList.map(function ({ id, title }) {
-        return <TodoListItem key={id} title={title} />;
-      })}
+      {onTodoList.map((item) => (
+        <TodoListItem
+          key={item.id}
+          id={item.id}
+          title={item.title}
+          onRemoveTodo={onRemoveTodo}
+        />
+      ))}
     </ul>
   );
-};
-
-export default TodoList;
+}

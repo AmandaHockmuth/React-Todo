@@ -10,27 +10,42 @@ function App() {
   );
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          resolve({
-            data: {
-              todoList: JSON.parse(localStorage.getItem("savedTodoList")),
-            },
-          });
-        } catch (error) {
-          reject(error);
-        }
-      }, 2000);
-    })
-      .then((result) => {
-        setTodoList(result.data.todoList);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
+  const fetchData = async () => {
+    const url = `https://api.airtable.com/v0/${
+      import.meta.env.VITE_AIRTABLE_BASE_ID
+    }/${import.meta.env.VITE_TABLE_NAME}`;
+    const options = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
+      },
+    };
+    try {
+      const response = await fetch(url, options);
+
+      if (!response.ok) {
+        const message = `Error: ${response.status}`;
+        throw new Error(message);
+      }
+
+      const data = await response.json();
+      const todos = data.records.map((todo) => {
+        const newTodo = {
+          title: todo.fields.Title,
+          id: todo.id,
+        };
+        return newTodo;
       });
+      console.log(todos);
+      setTodoList(todos);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -63,3 +78,6 @@ function App() {
 }
 
 export default App;
+
+
+// Attempted Stretch Goal in AddTodoForm

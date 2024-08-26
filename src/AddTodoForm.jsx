@@ -5,6 +5,10 @@ const AddTodoForm = ({ onAddTodo }) => {
   const [todoTitle, setTodoTitle] = useState("");
 
   const postTodo = async (todo) => {
+    if (!todo) {
+      const message = `Error has ocurred: Please enter a Todo Item Title.`;
+      throw new Error(message);
+    }
     try {
       const airtableData = {
         fields: {
@@ -32,8 +36,11 @@ const AddTodoForm = ({ onAddTodo }) => {
       }
 
       const dataResponse = await response.json();
-      console.log(dataResponse);
-      return dataResponse;
+      const formattedData = {
+        title: dataResponse.fields.Title,
+        id: dataResponse.id,
+      };
+      return formattedData;
     } catch (error) {
       console.log(error.message);
       return null;
@@ -45,13 +52,12 @@ const AddTodoForm = ({ onAddTodo }) => {
     setTodoTitle(newTodoTitle);
   }
 
-  function handleAddTodo(event) {
+  const handleAddTodo = async (event) => {
     event.preventDefault();
-    onAddTodo(
-      postTodo(todoTitle)
-    );
+    const returnedTodo = await postTodo(todoTitle);
+    onAddTodo(returnedTodo);
     setTodoTitle(``);
-  }
+  };
 
   return (
     <form onSubmit={handleAddTodo}>
@@ -68,5 +74,7 @@ const AddTodoForm = ({ onAddTodo }) => {
 
 export default AddTodoForm;
 
-// Stretch Goal: sends to Airtable but only shows an additional blank item until the page is refreshed
-// possible issue within TodoList.jsx?
+//Set Up React Router
+//Finished Stretch goal
+//HANDLED EMPTY ENTRY - Currently adds an item with an empty title
+

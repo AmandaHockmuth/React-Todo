@@ -2,12 +2,10 @@ import "./App.css";
 import TodoList from "./TodoList.jsx";
 import AddTodoForm from "./AddTodoForm.jsx";
 import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
-  const [todoList, setTodoList] = useState(
-    //  ||
-    []
-  );
+  const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
@@ -36,7 +34,6 @@ function App() {
         };
         return newTodo;
       });
-      console.log(todos);
       setTodoList(todos);
       setIsLoading(false);
     } catch (error) {
@@ -60,24 +57,33 @@ function App() {
   };
 
   const addTodo = (newTodo) => {
-    setTodoList([...todoList, newTodo]);
+    setTodoList((prevTodoList) => [...prevTodoList, newTodo]);
+    setIsLoading(false);
   };
 
   return (
-    <>
-      <h1>Todo List</h1>
-      <AddTodoForm onAddTodo={addTodo} />
-      <p>{}</p>
-      {isLoading ? (
-        <p>{"Loading..."}</p>
-      ) : (
-        <TodoList onTodoList={todoList} onRemoveTodo={removeTodo} />
-      )}
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <h1>Todo List</h1>
+
+              <AddTodoForm onAddTodo={addTodo} />
+              <p>{}</p>
+              {isLoading ? (
+                <p>{"Loading..."}</p>
+              ) : (
+                <TodoList onTodoList={todoList} onRemoveTodo={removeTodo} />
+              )}
+            </>
+          }
+        ></Route>
+        <Route path="/new" element={<h1>New Todo List</h1>}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
 export default App;
-
-
-// Attempted Stretch Goal in AddTodoForm

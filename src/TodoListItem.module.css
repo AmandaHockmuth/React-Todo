@@ -1,0 +1,27 @@
+@font-face {
+  font-family: "Cedarville";
+  src: url(./assets/fonts/CedarvilleCursive-Regular.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.ListItem {
+  text-align: left;
+}
+
+.CompleteButton {
+  font-family: "Cedarville", Papyrus, Brush Script;
+  font-size: 1.1em;
+}
+
+@media (max-width: 965px) {
+  .CompleteButton {
+    font-size: 1.2em;
+  }
+}
+
+@media (max-width: 550px) {
+  .CompleteButton {
+    font-size: 1.25em;
+  }
+}

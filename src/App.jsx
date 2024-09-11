@@ -68,19 +68,20 @@ function App() {
           path="/"
           element={
             <>
-              <h1>Todo List</h1>
-
-              <AddTodoForm onAddTodo={addTodo} />
+              <h1>Todo List:</h1>
               <p>{}</p>
               {isLoading ? (
                 <p>{"Loading..."}</p>
               ) : (
+              <div className="TodoContainer">
                 <TodoList onTodoList={todoList} onRemoveTodo={removeTodo} />
-              )}
+                <AddTodoForm onAddTodo={addTodo} />
+              </div>
+            )}
             </>
           }
         ></Route>
-        <Route path="/new" element={<h1>New Todo List</h1>}></Route>
+        <Route path="/new" element={<h1>New Todo List:</h1>}></Route>
       </Routes>
     </BrowserRouter>
   );

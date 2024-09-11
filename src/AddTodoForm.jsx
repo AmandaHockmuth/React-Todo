@@ -1,5 +1,6 @@
 import { useState } from "react";
 import InputWithLabel from "./InputWithLabel.jsx";
+import style from "./InputWithLabel.module.css";
 
 const AddTodoForm = ({ onAddTodo }) => {
   const [todoTitle, setTodoTitle] = useState("");
@@ -60,12 +61,12 @@ const AddTodoForm = ({ onAddTodo }) => {
   };
 
   return (
-    <form onSubmit={handleAddTodo}>
+    <form onSubmit={handleAddTodo} className={style.InputGroup}>
       <InputWithLabel
         todoTitle={todoTitle}
         handleTitleChange={handleTitleChange}
       >
-        Title:
+        New Item
       </InputWithLabel>
       <button type="submit">Add</button>
     </form>
@@ -74,7 +75,5 @@ const AddTodoForm = ({ onAddTodo }) => {
 
 export default AddTodoForm;
 
-//Set Up React Router
-//Finished Stretch goal
-//HANDLED EMPTY ENTRY - Currently adds an item with an empty title
-
+//HANDLED EMPTY ENTRY - Was adding an empty item when a blank form was submitted,
+// now handled with an if block to return an error in the console.

@@ -1,0 +1,35 @@
+@font-face {
+  font-family: "Cedarville";
+  src: url(../assets/fonts/CedarvilleCursive-Regular.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gloock";
+  src: url(./assets/fonts/Gloock-Regular.ttf) format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-size: 0.9em;
+}
+
+.ListItem {
+  font-family: "Cedarville", Papyrus, Brush Script;
+  text-align: left;
+}
+
+.CompleteButton {
+  font-family: "Gloock", Georgia, Times, "Times New Roman", serif;
+}
+
+@media (max-width: 965px) {
+  .ListItem {
+    font-size: 1.2em;
+  }
+}
+
+@media (max-width: 550px) {
+  .ListItem {
+    font-size: 1.25em;
+  }
+}

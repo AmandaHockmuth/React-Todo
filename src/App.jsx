@@ -1,6 +1,6 @@
 import "./App.css";
-import TodoList from "./TodoList.jsx";
-import AddTodoForm from "./AddTodoForm.jsx";
+import TodoList from "./components/TodoList.jsx";
+import AddTodoForm from "./components/AddTodoForm.jsx";
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -51,9 +51,37 @@ function App() {
     }
   }, [todoList, isLoading]);
 
-  const removeTodo = (id) => {
-    const filteredList = todoList.filter((todoItem) => todoItem.id !== id);
-    setTodoList(filteredList);
+  const deleteTodo = async (id) => {
+    const url = `https://api.airtable.com/v0/${
+      import.meta.env.VITE_AIRTABLE_BASE_ID
+    }/${import.meta.env.VITE_TABLE_NAME}/${id}`;
+    const options = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
+      },
+    };
+
+    try {
+      const response = await fetch(url, options);
+
+      if (!response.ok) {
+        const message = `Error: ${response.status}`;
+        throw new Error(message);
+      }
+
+      console.log("Todo deleted from Airtable successfully!");
+    } catch (error) {
+      console.error("Error deleting todo from Airtable:", error.message);
+    }
+  };
+
+  const removeTodo = async (id) => {
+    await deleteTodo(id);
+    setTodoList((prevTodoList) =>
+      prevTodoList.filter((todoItem) => todoItem.id !== id)
+    );
+    fetchData();
   };
 
   const addTodo = (newTodo) => {
@@ -73,11 +101,11 @@ function App() {
               {isLoading ? (
                 <p>{"Loading..."}</p>
               ) : (
-              <div className="TodoContainer">
-                <TodoList onTodoList={todoList} onRemoveTodo={removeTodo} />
-                <AddTodoForm onAddTodo={addTodo} />
-              </div>
-            )}
+                <div className="TodoContainer">
+                  <TodoList onTodoList={todoList} onRemoveTodo={removeTodo} />
+                  <AddTodoForm onAddTodo={addTodo} />
+                </div>
+              )}
             </>
           }
         ></Route>

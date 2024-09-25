@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import style from "./TodoListItem.module.css";
 
 export default function TodoListItem({ title, id, onRemoveTodo }) {
@@ -8,9 +9,19 @@ export default function TodoListItem({ title, id, onRemoveTodo }) {
   return (
     <li className={style.ListItem}>
       {title}
-      <button type="button" className={style.CompleteButton} onClick={handleRemoveTodo}>
-      ✔ Complete?
+      <button
+        type="button"
+        className={style.CompleteButton}
+        onClick={handleRemoveTodo}
+      >
+        ✔ Complete?
       </button>
     </li>
   );
 }
+
+TodoListItem.propTypes = {
+  onRemoveTodo: PropTypes.func,
+  id: PropTypes.string,
+  title: PropTypes.string,
+};

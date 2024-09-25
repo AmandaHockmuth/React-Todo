@@ -52,6 +52,7 @@ h1 {
 }
 
 button {
+  overflow: hidden;
   border-radius: 1rem;
   border: 1px solid transparent;
   padding: 1em 1.4em;
@@ -62,14 +63,38 @@ button {
   background-color: transparent;
   cursor: pointer;
   transition: border-color 0.25s;
+  position: relative;
+  transition: 0.2s transform ease-in-out;
+  will-change: transform;
+  z-index: 0;
+
+  &::after {
+    background-color: #fff2f2;
+    border-radius: 3rem;
+    content: "";
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-100%, 0) rotate(10deg);
+    transform-origin: top left;
+    transition: 0.2s transform ease-out;
+    will-change: transform;
+    z-index: -1;
+  }
+  &:hover::after {
+    transform: translate(0, 0);
+  }
+  &:hover {
+    border: 2px solid transparent;
+    color: #2a0000;
+    transform: scale(1.05);
+    will-change: transform;
+  }
 }
-button:hover {
-  border-color: #560101;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -109,3 +134,5 @@ button:focus-visible {
     text-wrap: nowrap;
   }
 }
+
+/* add "check if user prefers dark mode" */

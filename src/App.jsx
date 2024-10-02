@@ -9,9 +9,14 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
+    // const ascSort = "?view=Grid%20view&sort[0][field]=Title&sort[0][direction]=asc"
+    // const desSort = "?view=Grid%20view&sort[0][field]=Title&sort[0][direction]=desc"
+
     const url = `https://api.airtable.com/v0/${
       import.meta.env.VITE_AIRTABLE_BASE_ID
-    }/${import.meta.env.VITE_TABLE_NAME}`;
+    }/${
+      import.meta.env.VITE_TABLE_NAME
+    }/?view=Grid%20view&sort[0][field]=Title&sort[0][direction]=asc`;
     const options = {
       method: "GET",
       headers: {
@@ -27,6 +32,7 @@ function App() {
       }
 
       const data = await response.json();
+
       const todos = data.records.map((todo) => {
         const newTodo = {
           title: todo.fields.Title,
@@ -34,7 +40,22 @@ function App() {
         };
         return newTodo;
       });
-      setTodoList(todos);
+
+      console.log("todos: ", todos);
+
+      // SORTING
+      const sortedTodos = todos.sort((a, b) => {
+        if (a.title < b.title) {
+          return 1;
+        } else if (a.title > b.title) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      //
+
+      setTodoList(sortedTodos);
       setIsLoading(false);
     } catch (error) {
       console.log(error.message);

@@ -7,16 +7,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [sortState, setSortState] = useState(0); // 0: Chronological Descending 1: Title Ascending, 2: Title Descending, 3: Chronological Ascending
 
   const fetchData = async () => {
-    // const ascSort = "?view=Grid%20view&sort[0][field]=Title&sort[0][direction]=asc"
-    // const desSort = "?view=Grid%20view&sort[0][field]=Title&sort[0][direction]=desc"
-
     const url = `https://api.airtable.com/v0/${
       import.meta.env.VITE_AIRTABLE_BASE_ID
-    }/${
-      import.meta.env.VITE_TABLE_NAME
-    }/?view=Grid%20view&sort[0][field]=Title&sort[0][direction]=asc`;
+    }/${import.meta.env.VITE_TABLE_NAME}/?view=Grid%20view&sort`;
     const options = {
       method: "GET",
       headers: {
@@ -32,28 +28,17 @@ function App() {
       }
 
       const data = await response.json();
-
       const todos = data.records.map((todo) => {
         const newTodo = {
           title: todo.fields.Title,
           id: todo.id,
+          createdTime: todo.createdTime,
         };
         return newTodo;
       });
 
-      console.log("todos: ", todos);
-
-      // SORTING
-      const sortedTodos = todos.sort((a, b) => {
-        if (a.title < b.title) {
-          return 1;
-        } else if (a.title > b.title) {
-          return -1;
-        } else {
-          return 0;
-        }
-      });
-      //
+      const sortedTodos = handleSortTodos(todos);
+      console.log("sortedTodos: ", sortedTodos);
 
       setTodoList(sortedTodos);
       setIsLoading(false);
@@ -65,6 +50,34 @@ function App() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // SORTING
+  const handleSortTodos = (todos) => {
+    return todos.sort((a, b) => {
+      if (sortState === 0) {
+        // Chronologically Descending
+        return new Date(b.createdTime) - new Date(a.createdTime);
+      } else if (sortState === 1) {
+        // Alphabetically Ascending
+        return a.title.localeCompare(b.title);
+      } else if (sortState === 2) {
+        // Alphabetically Descending
+        return b.title.localeCompare(a.title);
+      } else {
+        // Chronologically Ascending
+        return new Date(a.createdTime) - new Date(b.createdTime);
+      }
+    });
+  };
+
+  const handleToggle = () => {
+    setSortState((sortState) => (sortState + 1) % 4);
+  };
+
+  useEffect(() => {
+    setTodoList((prevTodoList) => handleSortTodos(prevTodoList.slice()));
+  }, [sortState]);
+  //
 
   useEffect(() => {
     if (!isLoading) {
@@ -124,6 +137,15 @@ function App() {
               ) : (
                 <div className="TodoContainer">
                   <TodoList onTodoList={todoList} onRemoveTodo={removeTodo} />
+                  <button onClick={handleToggle}>
+                    {sortState === 0
+                      ? "Sort A-Z"
+                      : sortState === 1
+                      ? "Sort Z-A"
+                      : sortState === 2
+                      ? "Sort Oldest"
+                      : "Sort Newest"}
+                  </button>
                   <AddTodoForm onAddTodo={addTodo} />
                 </div>
               )}

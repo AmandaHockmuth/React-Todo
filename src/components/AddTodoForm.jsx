@@ -1,10 +1,16 @@
 import { useState } from "react";
 import InputWithLabel from "./InputWithLabel.jsx";
+import style from "./InputWithLabel.module.css";
+import PropTypes from "prop-types";
 
 const AddTodoForm = ({ onAddTodo }) => {
   const [todoTitle, setTodoTitle] = useState("");
 
   const postTodo = async (todo) => {
+    if (!todo) {
+      const message = `Error has ocurred: Please enter a Todo Item Title.`;
+      throw new Error(message);
+    }
     try {
       const airtableData = {
         fields: {
@@ -32,8 +38,11 @@ const AddTodoForm = ({ onAddTodo }) => {
       }
 
       const dataResponse = await response.json();
-      console.log(dataResponse);
-      return dataResponse;
+      const formattedData = {
+        title: dataResponse.fields.Title,
+        id: dataResponse.id,
+      };
+      return formattedData;
     } catch (error) {
       console.log(error.message);
       return null;
@@ -45,28 +54,31 @@ const AddTodoForm = ({ onAddTodo }) => {
     setTodoTitle(newTodoTitle);
   }
 
-  function handleAddTodo(event) {
+  const handleAddTodo = async (event) => {
     event.preventDefault();
-    onAddTodo(
-      postTodo(todoTitle)
-    );
+    const returnedTodo = await postTodo(todoTitle);
+    onAddTodo(returnedTodo);
     setTodoTitle(``);
-  }
+  };
 
   return (
-    <form onSubmit={handleAddTodo}>
+    <form onSubmit={handleAddTodo} className={style.InputGroup}>
       <InputWithLabel
         todoTitle={todoTitle}
         handleTitleChange={handleTitleChange}
       >
-        Title:
+        New Item
       </InputWithLabel>
       <button type="submit">Add</button>
     </form>
   );
 };
 
+AddTodoForm.propTypes = {
+  onAddTodo: PropTypes.func,
+};
+
 export default AddTodoForm;
 
-// Stretch Goal: sends to Airtable but only shows an additional blank item until the page is refreshed
-// possible issue within TodoList.jsx?
+//HANDLED EMPTY ENTRY - Was adding an empty item when a blank form was submitted,
+// now handled with an if block to return an error in the console.

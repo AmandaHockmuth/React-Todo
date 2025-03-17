@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   const [todoList, setTodoList] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [sortState, setSortState] = useState(0); // 0: Chronological Descending 1: Title Ascending, 2: Title Descending, 3: Chronological Ascending
 
